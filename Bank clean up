@@ -1,52 +1,26 @@
 -- Total value of transaction by each bank
-SELECT 
-    substring_index(transaction_code,'-',1) AS bank,
-    SUM(value) as Value
-FROM
-    pd23_wk1
+SELECT   substring_index(transaction_code,'-',1) AS bank,
+         SUM(value) as Value
+FROM pd23_wk1
 GROUP BY bank;
 
 -- Total value by bank, day of the week and type of tansaction
 
-SELECT 
-    substring_index(transaction_code,'-',1) AS bank,
-    CASE
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '1' THEN 'monday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '0' THEN 'sunday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '2' THEN 'Tuesday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '3' THEN 'wednesday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '4' THEN 'thursday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '5' THEN 'friday'
-        WHEN WEEKDAY(STR_TO_DATE(transaction_date, '%d/%m/%y')) = '6' THEN 'saturday'
-    END AS Transaction_date,
-    CASE
-        WHEN online_inperson = '2' THEN 'InPerson'
-        WHEN online_inperson = '1' THEN 'Online'
-    END AS Online_Inperson,
-    SUM(value) AS value
-FROM
-    pd23_wk1
-GROUP BY bank , Transaction_Date, Online_Inperson;
 
--- OR
-
-SELECT 
-    substring_index(transaction_code,'-',1) AS bank,
-    dayname(str_to_date(Transaction_date,'%d/%m/%y')) as transactn_date,
-    CASE
+SELECT  substring_index(transaction_code,'-',1) AS bank,
+        dayname(str_to_date(Transaction_date,'%d/%m/%y')) as transactn_date,
+        CASE
         WHEN online_inperson = '2' THEN 'InPerson' 
         else 'online' END AS Online_Inperson,
-    SUM(value) AS value
+        SUM(value) AS value
 FROM pd23_wk1
 GROUP BY bank , transactn_Date , Online_Inperson; 
 
 
 
 -- Total value by bank code amd customer_code
-SELECT 
-    substring_index(transaction_code,'-',1) AS bank,
-    customer_code,
-    SUM(value)  as Value
-FROM
-    pd23_wk1
+SELECT   substring_index(transaction_code,'-',1) AS bank,
+         customer_code,
+         SUM(value)  as Value
+FROM  pd23_wk1
 GROUP BY bank , customer_code;
